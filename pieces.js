@@ -39,8 +39,9 @@ for (let i = 0; i < pieces.length; i++) {
     pieceElement.appendChild(disponibiliteElement);
 }
 
-const boutonTrier = document.querySelector(".btn-trier");
-boutonTrier.addEventListener("click", () => {
+//Trie par prix croissant
+const boutonTrierCroissant = document.querySelector(".btn-trier-croissant");
+boutonTrierCroissant.addEventListener("click", () => {
     //copie de la liste à trier pour ne pas modifier l'original.
     const piecesOrdonnees = Array.from(pieces);
     /* Sort s'attend à recevoir un nombre de la fonction anonyme:
@@ -50,14 +51,33 @@ boutonTrier.addEventListener("click", () => {
     piecesOrdonnees.sort(function (a, b) {
         return a.prix - b.prix;
     });
-    console.log(pieces);
     console.log(piecesOrdonnees);
 })
 
-const boutonFiltrer = document.querySelector(".btn-filtrer");
-boutonFiltrer.addEventListener("click", () => {
+//Trie par prix décroissant
+const boutonTrierDecroissant = document.querySelector(".btn-trier-decroissant");
+boutonTrierDecroissant.addEventListener("click", () => {
+    const piecesOrdonnees = Array.from(pieces);
+    piecesOrdonnees.sort(function (a, b) {
+        return b.prix - a.prix;
+    });
+    console.log(piecesOrdonnees);
+})
+
+//Filtrer les pièces non abordables
+const boutonFiltrerNonAbordable = document.querySelector(".btn-filtrer-non-abordable");
+boutonFiltrerNonAbordable.addEventListener("click", () => {
     const piecesFiltrees = pieces.filter(function (piece) {
         return piece.prix <= 35;
+    });
+    console.log(piecesFiltrees);
+});
+
+//Filtrer les pièces sans description
+const boutonFiltrerSansDescription = document.querySelector(".btn-filtrer-sans-description");
+boutonFiltrerSansDescription.addEventListener("click", () => {
+    const piecesFiltrees = pieces.filter(function (piece) {
+        return piece.description;
     });
     console.log(piecesFiltrees);
 });
