@@ -2,42 +2,46 @@
 const reponse = await fetch("pieces-autos.json");
 const pieces = await reponse.json();
 
-for (let i = 0; i < pieces.length; i++) {
-    const article = pieces[i];
+function genererPieces(pieces) {
+    for (let i = 0; i < pieces.length; i++) {
+        const article = pieces[i];
 
-    //Création et remplissage des balises qui vont afficher les différents élément de l'article
-    const imageElement = document.createElement("img");
-    imageElement.src = article.image;
+        //Création et remplissage des balises qui vont afficher les différents élément de l'article
+        const imageElement = document.createElement("img");
+        imageElement.src = article.image;
 
-    const nomElement = document.createElement("h2");
-    nomElement.innerText = article.nom;
+        const nomElement = document.createElement("h2");
+        nomElement.innerText = article.nom;
 
-    const prixElement = document.createElement("p");
-    prixElement.innerText = `Prix: ${article.prix} € (${article.prix < 35 ? "€" : "€€€"})`;
+        const prixElement = document.createElement("p");
+        prixElement.innerText = `Prix: ${article.prix} € (${article.prix < 35 ? "€" : "€€€"})`;
 
-    const categorieElement = document.createElement("p");
-    categorieElement.innerText = article.categorie ?? "(aucune catégorie)";
+        const categorieElement = document.createElement("p");
+        categorieElement.innerText = article.categorie ?? "(aucune catégorie)";
 
-    const descriptionElement = document.createElement("p");
-    descriptionElement.innerText = `${article.description ?? "Pas de description pour le moment"}`;
+        const descriptionElement = document.createElement("p");
+        descriptionElement.innerText = `${article.description ?? "Pas de description pour le moment"}`;
 
-    const disponibiliteElement = document.createElement("p");
-    disponibiliteElement.innerText = article.disponibilité ? "En stock" : "Rupture de stock";
+        const disponibiliteElement = document.createElement("p");
+        disponibiliteElement.innerText = article.disponibilité ? "En stock" : "Rupture de stock";
 
-    //Rattachement des balises au DOM
-    const sectionFiches = document.querySelector(".fiches");
+        //Rattachement des balises au DOM
+        const sectionFiches = document.querySelector(".fiches");
 
-    //On place chaque piece dans une balise article
-    const pieceElement = document.createElement("article")
-    sectionFiches.appendChild(pieceElement);
+        //On place chaque piece dans une balise article
+        const pieceElement = document.createElement("article")
+        sectionFiches.appendChild(pieceElement);
 
-    pieceElement.appendChild(imageElement);
-    pieceElement.appendChild(nomElement);
-    pieceElement.appendChild(prixElement);
-    pieceElement.appendChild(categorieElement);
-    pieceElement.appendChild(descriptionElement);
-    pieceElement.appendChild(disponibiliteElement);
+        pieceElement.appendChild(imageElement);
+        pieceElement.appendChild(nomElement);
+        pieceElement.appendChild(prixElement);
+        pieceElement.appendChild(categorieElement);
+        pieceElement.appendChild(descriptionElement);
+        pieceElement.appendChild(disponibiliteElement);
+    }
 }
+
+genererPieces(pieces);
 
 //Trie par prix croissant
 const boutonTrierCroissant = document.querySelector(".btn-trier-croissant");
@@ -51,7 +55,8 @@ boutonTrierCroissant.addEventListener("click", () => {
     piecesOrdonnees.sort(function (a, b) {
         return a.prix - b.prix;
     });
-    console.log(piecesOrdonnees);
+    document.querySelector(".fiches").innerHTML = "";
+    genererPieces(piecesOrdonnees);
 })
 
 //Trie par prix décroissant
@@ -61,8 +66,9 @@ boutonTrierDecroissant.addEventListener("click", () => {
     piecesOrdonnees.sort(function (a, b) {
         return b.prix - a.prix;
     });
-    console.log(piecesOrdonnees);
-})
+    document.querySelector(".fiches").innerHTML = "";
+    genererPieces(piecesOrdonnees);
+});
 
 //Filtrer les pièces non abordables
 const boutonFiltrerNonAbordable = document.querySelector(".btn-filtrer-non-abordable");
@@ -70,7 +76,8 @@ boutonFiltrerNonAbordable.addEventListener("click", () => {
     const piecesFiltrees = pieces.filter(function (piece) {
         return piece.prix <= 35;
     });
-    console.log(piecesFiltrees);
+    document.querySelector(".fiches").innerHTML = "";
+    genererPieces(piecesFiltrees);
 });
 
 //Filtrer les pièces sans description
@@ -79,7 +86,8 @@ boutonFiltrerSansDescription.addEventListener("click", () => {
     const piecesFiltrees = pieces.filter(function (piece) {
         return piece.description;
     });
-    console.log(piecesFiltrees);
+    document.querySelector(".fiches").innerHTML = "";
+    genererPieces(piecesFiltrees);
 });
 
 //récupération uniquement des noms des articles (avec.map) inférieur à 35€ (on supprime avec splice)
@@ -116,3 +124,13 @@ for (let i = 0; i < nomsEtPrixDisponibles.length; i++) {
     disponiblesElements.appendChild(disponibleElement)
 }
 document.querySelector(".disponibles").appendChild(disponiblesElements);
+
+//Ajout d'un addEventListener sur <input type="range" pour filtrer les prix
+const rangePrix = document.querySelector(".filtres input");
+rangePrix.addEventListener("input", () => {
+    const piecesFiltrees = pieces.filter(function (piece) {
+        return piece.prix <= rangePrix.value;
+    });
+    document.querySelector(".fiches").innerHTML = "";
+    genererPieces(piecesFiltrees);
+});
