@@ -81,3 +81,38 @@ boutonFiltrerSansDescription.addEventListener("click", () => {
     });
     console.log(piecesFiltrees);
 });
+
+//récupération uniquement des noms des articles (avec.map) inférieur à 35€ (on supprime avec splice)
+const nomsAbordables = pieces.map(piece => piece.nom);
+for (let i = pieces.length - 1; i >= 0; i--) {
+    if (pieces[i].prix >= 35) {
+        nomsAbordables.splice(i, 1);
+    }
+}
+//création de la liste ul
+const abordablesElements = document.createElement("ul");
+//ajout de chaque noms à la liste
+for (let i = 0; i < nomsAbordables.length; i++) {
+    const abordableElement = document.createElement("li");
+    abordableElement.innerText = nomsAbordables[i];
+    abordablesElements.appendChild(abordableElement)
+}
+//Et on attache le tout dans la <div> prévu
+document.querySelector(".abordables").appendChild(abordablesElements);
+
+
+//récupération des noms et prix des articles (avec.map). On supprime les article indisponible avec splice
+const nomsEtPrixDisponibles = pieces.map(piece => `${piece.nom} - ${piece.prix}€.`);
+for (let i = pieces.length - 1; i >= 0; i--) {
+    if (pieces[i].disponibilité === false) {
+        nomsEtPrixDisponibles.splice(i, 1);
+    }
+}
+// Ajout des éléments de la liste au html
+const disponiblesElements = document.createElement("ul");
+for (let i = 0; i < nomsEtPrixDisponibles.length; i++) {
+    const disponibleElement = document.createElement("li");
+    disponibleElement.innerText = nomsEtPrixDisponibles[i];
+    disponiblesElements.appendChild(disponibleElement)
+}
+document.querySelector(".disponibles").appendChild(disponiblesElements);
