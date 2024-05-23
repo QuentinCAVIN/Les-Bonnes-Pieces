@@ -1,3 +1,5 @@
+import { ajoutListenerAvis } from "./avis.js";
+
 //Récupération depuis le fichier JSON (à voir en P3 pour l'instant on admet juste)
 const reponse = await fetch("pieces-autos.json");
 const pieces = await reponse.json();
@@ -25,6 +27,10 @@ function genererPieces(pieces) {
         const disponibiliteElement = document.createElement("p");
         disponibiliteElement.innerText = article.disponibilité ? "En stock" : "Rupture de stock";
 
+        const avisBouton = document.createElement("button");
+        avisBouton.dataset.id = article.id;
+        avisBouton.textContent = "Afficher les avis";
+
         //Rattachement des balises au DOM
         const sectionFiches = document.querySelector(".fiches");
 
@@ -38,7 +44,9 @@ function genererPieces(pieces) {
         pieceElement.appendChild(categorieElement);
         pieceElement.appendChild(descriptionElement);
         pieceElement.appendChild(disponibiliteElement);
+        pieceElement.appendChild(avisBouton);
     }
+    ajoutListenerAvis();
 }
 
 genererPieces(pieces);
