@@ -1,13 +1,24 @@
+//ajout de l'écoute du click sur le boutton "afficher commentaire" qui afficher les commentaires 
 export function ajoutListenerAvis() {
     const piecesElements = document.querySelectorAll(".fiches article button");
-
+    //On ajoute les avis sur chaque pieces
     for (let i = 0; i < piecesElements.length; i++) {
         piecesElements[i].addEventListener("click", async function (event) {
             const id = event.target.dataset.id;
-            const reponse = await fetch(`http://localhost:8081/pieces/${id}/avis`);
-            const avis = await reponse.json();
+            // on regarde en premier lieu si il y a des avis dans le localStorage
+            let avis = window.localStorage.getItem(`${id}/avis`);
+            // sinon, on récupére les avis depuis l'API
+            if (avis === null) {
+                const reponse = await fetch(`http://localhost:8081/pieces/${id}/avis`);
+                avis = await reponse.json();
+                // et on enregistre les avis dans le localStorage
+                const valeurAvis = JSON.stringify(avis);
+                window.localStorage.setItem(`${id}/avis`, valeurAvis);
+            } else {
+                avis = JSON.parse(avis)
+            }
             const pieceElement = event.target.parentElement;
-
+            //Pour chaque commentaire, on crée et rattache un <p> avec le commentaire à la pièce 
             const avisElement = document.createElement("p");
             for (let i = 0; i < avis.length; i++) {
                 avisElement.innerHTML += `<b>${avis[i].utilisateur}:</b> ${avis[i].commentaire}<br>`;

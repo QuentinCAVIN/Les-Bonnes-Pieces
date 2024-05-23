@@ -1,8 +1,26 @@
 import { ajoutListenerAvis, ajoutListenerEnvoyerAvis } from "./avis.js";
 
-//Récupération depuis le fichier JSON (à voir en P3 pour l'instant on admet juste)
-const reponse = await fetch("http://localhost:8081/pieces");
-const pieces = await reponse.json();
+// Récupération des piéces eventuellement stocké dans le localStorage
+let pieces = window.localStorage.getItem("pieces");
+console.log(pieces)
+if (pieces === null) {
+    //Récupération depuis l'API (pour récupérer depuis le fichier JSON on indiquera simpelemnt le nom du fichier json à la place de l'URL)
+    const reponse = await fetch("http://localhost:8081/pieces");
+    pieces = await reponse.json();
+    //On peut également écrire:
+    //const pieces = await fetch("http://localhost:8081/pieces").then(pieces => pieces.json());
+
+    // Transformation des pièces en JSON
+    const valeurPieces = JSON.stringify(pieces);
+
+    // Stockage des informations dans le localStorage
+    window.localStorage.setItem("pieces", valeurPieces);
+
+} else {
+    pieces = JSON.parse(pieces);
+}
+
+
 
 ajoutListenerEnvoyerAvis();
 
@@ -143,4 +161,9 @@ rangePrix.addEventListener("input", () => {
     });
     document.querySelector(".fiches").innerHTML = "";
     genererPieces(piecesFiltrees);
+});
+
+const boutonMettreAJour = document.querySelector(".btn-maj");
+boutonMettreAJour.addEventListener("click", () => {
+    window.localStorage.removeItem("pieces")
 });
