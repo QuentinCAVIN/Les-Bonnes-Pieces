@@ -1,7 +1,7 @@
 import { ajoutListenerAvis } from "./avis.js";
 
 //Récupération depuis le fichier JSON (à voir en P3 pour l'instant on admet juste)
-const reponse = await fetch("pieces-autos.json");
+const reponse = await fetch("http://localhost:8081/pieces");
 const pieces = await reponse.json();
 
 function genererPieces(pieces) {
