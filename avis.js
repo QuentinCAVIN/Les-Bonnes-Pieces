@@ -54,3 +54,91 @@ export function ajoutListenerEnvoyerAvis() {
         })
     })
 }
+
+
+export async function afficherGraphiqueAvis() {
+
+    //Calcul du nombre de commentaire pour chaque nombre d'étoile
+    const avis = await fetch(`http://localhost:8081/avis`).then(avis => avis.json());
+    const nb_commentaires = [0, 0, 0, 0, 0];
+    for (let commentaire of avis) {
+        nb_commentaires[commentaire.nbEtoiles - 1]++;
+    }
+
+    // Légende qui s'affichera sur la gauche à côté de la barre horizontale
+    const labels = ["5", "4", "3", "2", "1"];
+
+    // Données et personnalisation du graphique
+    const data = {
+        labels: labels,
+        datasets: [{
+            label: "Étoiles attribuées",
+            data: nb_commentaires.reverse(),
+            backgroundColor: "rgba(255, 230, 0, 1)" //Jaune
+        }]
+    }
+
+    // Objet de configuration final
+    const config = {
+        type: "bar",
+        data: data,
+        options: {
+            indexAxis: "y",
+        },
+    };
+
+    // Rendu du graphique dans l'élément canvas
+    const graphiqueAvis = new Chart(
+        document.querySelector("#graphique-avis"),
+        config,
+    );
+}
+
+export async function afficherGraphiqueDisponibilite() {
+
+    //Calcul du nombre de commentaire pour le piéces disponible et indisponible
+    //On récupère les piéces 
+    const pieces = await fetch(`http://localhost:8081/pieces`).then(pieces => pieces.json());
+    const nb_commentaires = [0, 0];
+    for (let piece of pieces) {
+        // on récupére les avis de chaque pieces
+        const avis = await fetch(`http://localhost:8081/pieces/${piece.id}/avis`).then(avis => avis.json());
+        // Pour chaque commentaire des avis d'une piece, si cette piéce est disponible on incrémente le 1er element de nb_commentaire 
+        for (let commentaire of avis) {
+            if (piece.disponibilite === true) {
+                nb_commentaires[0]++;
+                // et le second élément dans le cas contraire
+            } else {
+                nb_commentaires[1]++;
+            }
+        }
+    }
+
+    // Légende qui s'affichera en dessosu des barres verticales
+    const labels = ["Les pièces disponible", "Les pièce indisponible"];
+
+    // Données et personnalisation du graphique
+    const data = {
+        labels: labels,
+        datasets: [{
+            label: "Nombre de commentaires sur: ",
+            data: nb_commentaires,
+            backgroundColor: "rgba(255, 230, 0, 1)" //Jaune
+        }]
+    }
+
+    // Objet de configuration final
+    const config = {
+        type: "bar",
+        data: data,
+        options: {
+            indexAxis: "x",
+        },
+    };
+
+    // Rendu du graphique dans l'élément canvas
+    const graphiqueDisponibilite = new Chart(
+        document.querySelector("#graphique-disponibilite"),
+        config,
+    );
+}

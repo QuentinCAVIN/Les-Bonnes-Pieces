@@ -9,6 +9,7 @@
 	<!--type="moudle" permet d'importer des variables et des fonctions sans rajouter
 	d'autres balises script dans le HTML-->
 	<script type="module" src="pieces.js"></script>
+	<script src="node_modules/chart.js/dist/chart.umd.js" defer></script>
 </head>
 
 <body>
@@ -44,9 +45,15 @@
 				<input type="number" name="nbEtoiles" min="0" max="5"><br>
 				<button>Envoyer</button>
 			</form>
+
 			<h3>Données</h3>
 			<button class="btn-maj">Mettre à jour les pièces</button>
 
+			<h3>Aperçu des avis</h3>
+			<canvas id="graphique-avis" width="300" height="300"></canvas>
+
+			<h3>Aperçu des pièces dispo</h3>
+			<canvas id="graphique-disponibilite" width="300" height="300"></canvas>
 
 		</section>
 
