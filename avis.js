@@ -1,3 +1,5 @@
+/* global Chart */
+
 //ajout de l'écoute du click sur le boutton "afficher commentaire" qui afficher les commentaires 
 export function ajoutListenerAvis() {
     const piecesElements = document.querySelectorAll(".fiches article button");
@@ -88,7 +90,7 @@ export async function afficherGraphiqueAvis() {
     };
 
     // Rendu du graphique dans l'élément canvas
-    const graphiqueAvis = new Chart(
+    new Chart(
         document.querySelector("#graphique-avis"),
         config,
     );
@@ -104,7 +106,7 @@ export async function afficherGraphiqueDisponibilite() {
         // on récupére les avis de chaque pieces
         const avis = await fetch(`http://localhost:8081/pieces/${piece.id}/avis`).then(avis => avis.json());
         // Pour chaque commentaire des avis d'une piece, si cette piéce est disponible on incrémente le 1er element de nb_commentaire 
-        for (let commentaire of avis) {
+        for (let i = 0; i < avis.length; i++) {
             if (piece.disponibilite === true) {
                 nb_commentaires[0]++;
                 // et le second élément dans le cas contraire
@@ -137,7 +139,7 @@ export async function afficherGraphiqueDisponibilite() {
     };
 
     // Rendu du graphique dans l'élément canvas
-    const graphiqueDisponibilite = new Chart(
+    new Chart(
         document.querySelector("#graphique-disponibilite"),
         config,
     );
